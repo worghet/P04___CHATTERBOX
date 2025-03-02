@@ -185,6 +185,8 @@
             
         };
 
+        setInterval(reload, 100);
+
         // window.addEventListener("beforeunload", function(event) {
 
         //     fetch("/chat", {
@@ -243,6 +245,11 @@
 
                 .then((response) => response.json())
                 .then((jsonResponse) => {
+
+                    // if (username == null) {
+                    //     getUsername();
+                    // }
+
                     chatBox.appendChild(buildMessageItem(jsonResponse))
                     chatBox.scrollTo(0, chatBox.scrollHeight);
                     tf.value = "";
@@ -284,7 +291,7 @@
 
                     // add each thing
                     jsonResponse.messages.forEach(message => chatBox.appendChild(buildMessageItem(message)));
-                    chatBox.scrollTo(0, chatBox.scrollHeight);
+                    // chatBox.scrollTo(0, chatBox.scrollHeight);
         
 
                 });

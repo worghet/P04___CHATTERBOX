@@ -9,10 +9,11 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.net.InetSocketAddress;
+import java.net.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -25,9 +26,10 @@ public class Main {
 
     public static void main(String[] args) throws Exception {
 
-        // make server on an ip TODO make auto
-        HttpServer server = HttpServer.create(new InetSocketAddress(8000), 0);
-        System.out.println("10.0.0.198");
+        String localHostAddress = getLocalIPAddress();
+        int serverPort = 8000;
+
+        HttpServer server = HttpServer.create(new InetSocketAddress(serverPort), 0);
 
         // get messages (make /messages)
         server.createContext("/chat", new MessageHandler());
@@ -47,7 +49,33 @@ public class Main {
         System.out.print("Starting simple http server... ");
         server.start();
         System.out.println("STARTED!");
+        System.out.println("http://" + localHostAddress + ":" + serverPort + "/chatterbox");
     }
+
+    public static String getLocalIPAddress() {
+        try {
+            // Get all network interfaces
+            Enumeration<NetworkInterface> networkInterfaces = NetworkInterface.getNetworkInterfaces();
+            while (networkInterfaces.hasMoreElements()) {
+                NetworkInterface networkInterface = networkInterfaces.nextElement();
+
+                // Get all IP addresses for each network interface
+                Enumeration<InetAddress> inetAddresses = networkInterface.getInetAddresses();
+                while (inetAddresses.hasMoreElements()) {
+                    InetAddress inetAddress = inetAddresses.nextElement();
+
+                    // Ignore loopback addresses like 127.0.0.1
+                    if (!inetAddress.isLoopbackAddress() && inetAddress instanceof Inet4Address) {
+                        return inetAddress.getHostAddress();  // Return the first valid IP address found
+                    }
+                }
+            }
+        } catch (SocketException e) {
+            e.printStackTrace();
+        }
+        return null;  // Return null if no IP address is found
+    }
+
 
     static class UsernameGiver implements HttpHandler {
 
