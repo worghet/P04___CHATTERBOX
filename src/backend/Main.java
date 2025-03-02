@@ -23,7 +23,11 @@ public class Main {
 
 
     public static void main(String[] args) throws Exception {
+
+        // make server on an ip TODO make auto
         HttpServer server = HttpServer.create(new InetSocketAddress("10.0.0.198", 8000), 0);
+
+        // get messages (make /messages)
         server.createContext("/chat", new MessageHandler());
 
         // goes to actual webpage
@@ -32,25 +36,29 @@ public class Main {
         // gets static resources
         server.createContext("/resources", new StaticFileHandler());
 
+        // idk what this is
         server.setExecutor(null); // creates a default executor
         System.out.print("Starting simple http server... ");
         server.start();
         System.out.println("STARTED!");
     }
 
+    // handler for "/chatterbox
     static class WebpageHandler implements HttpHandler {
         @Override
         public void handle(HttpExchange http) throws IOException {
 
+            // technically shouldnt get post anytime, but did if just in case
             if ("GET".equals(http.getRequestMethod())) {
-                // Serve the HTML file
-                String path = "src/frontend/chatterbox.html"; // Adjust path accordingly
-                byte[] htmlBytes = Files.readAllBytes(Paths.get(path));
 
-                // Set content type to text/html
+                // serve html
+
+                // get byt file path
+                String path = "src/frontend/chatterbox.html";
+                byte[] htmlBytes = Files.readAllBytes(Paths.get(path));
                 http.getResponseHeaders().set("Content-Type", "text/html");
 
-                // Send the response headers and the HTML file content
+                // send it
                 http.sendResponseHeaders(200, htmlBytes.length);
                 OutputStream os = http.getResponseBody();
                 os.write(htmlBytes);
@@ -59,13 +67,17 @@ public class Main {
         }
     }
 
+
+    // handler for static resources "/resources"
     static class StaticFileHandler implements HttpHandler {
         @Override
         public void handle(HttpExchange http) throws IOException {
-            // Serve static files (CSS, images, etc.)
+
+            // get filepath
             String filePathString = "src/frontend" + http.getRequestURI().getPath(); // Adjust the resource path
             Path filePath = Paths.get(filePathString);
 
+            // check existence
             if (Files.exists(filePath)) {
                 String mimeType = getMimeType(filePath.toString());
                 byte[] fileBytes = Files.readAllBytes(filePath);
@@ -88,18 +100,11 @@ public class Main {
 
         // Helper method to get MIME type based on file extension
         private String getMimeType(String fileName) {
-            if (fileName.endsWith(".css")) {
-                return "text/css";
-            } else if (fileName.endsWith(".jpg") || fileName.endsWith(".jpeg")) {
-                return "image/jpeg";
-            } else if (fileName.endsWith(".png")) {
+
+            if (fileName.endsWith(".png")) {
                 return "image/png";
             } else if (fileName.endsWith(".ttf")) {
                 return "font/ttf";
-            } else if (fileName.endsWith(".woff")) {
-                return "font/woff";
-            } else if (fileName.endsWith(".woff2")) {
-                return "font/woff2";
             } else {
                 return "application/octet-stream"; // Default MIME type
             }
