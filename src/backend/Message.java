@@ -26,20 +26,49 @@ public class Message {
 
     static Random random = new Random();
     static String[] adjectives = {
-            "Amazing", "Bright", "Curious", "Determined", "Energetic",
-            "Fierce", "Graceful", "Honest", "Incredible", "Joyful",
-            "Kind", "Lively", "Mysterious", "Noble", "Optimistic",
-            "Powerful", "Quick", "Radiant", "Strong", "Thoughtful",
-            "Unique", "Vibrant", "Witty", "Xenial", "Youthful", "Zesty"
+            "Absurd", "Bouncy", "Chubby", "Dizzy", "Eccentric",
+            "Fluffy", "Goofy", "Hilarious", "Invisible", "Jiggly",
+            "Kooky", "Lumpy", "Mischievous", "Noodle", "Puffy",
+            "Quirky", "Rambunctious", "Silly", "Twirly", "Ugly",
+            "Vibrant", "Wobbly", "Xtra", "Yummy", "Zany",
+            "Awkward", "Baffled", "Chunky", "Dorky", "Extra",
+            "Flaky", "Greasy", "Hairy", "Irrational", "Jumpy",
+            "Krusty", "Lopsided", "Muggy", "Nutty", "Peculiar",
+            "Random", "Slippery", "Twirling", "Unpredictable", "Viral",
+            "Wacky", "Xenial", "Yucky", "Zigzag", "Bizarre",
+            "Clumsy", "Drippy", "Exaggerated", "Funky", "Gooey",
+            "Hooting", "Insane", "Jumpy", "Kooky", "Lopsided",
+            "Messy", "Nonsensical", "Overt", "Puddy", "Quacky",
+            "Ridiculous", "Soggy", "Tacky", "Unhinged", "Vexed",
+            "Wobbly", "Large", "Yowza", "Zipped", "Blundering",
+            "Confused", "Dizzying", "Eccentric", "Frightful", "Grumpy",
+            "Horrible", "Irritating", "Jelly", "Kettle-shaped", "Laughable",
+            "Muddled", "Nutso", "Overcooked", "Pineapple", "Quirky"
     };
 
     static String[] nouns = {
-            "Adventure", "Battle", "Castle", "Dream", "Echo",
-            "Forest", "Galaxy", "Hero", "Island", "Journey",
-            "Kingdom", "Legend", "Mountain", "Night", "Ocean",
-            "Pursuit", "Quest", "Reign", "Saga", "Tale",
-            "Universe", "Victory", "Warrior", "Xenon", "Yarn", "Zeal"
+            "Bacon", "Banana", "Cabbage", "Disaster", "Egret",
+            "Fungus", "Goat", "Hamster", "Igloo", "Jellybean",
+            "Kangaroo", "Lobster", "Muffin", "Noodle", "Octopus",
+            "Pineapple", "Quokka", "Raccoon", "Shark", "Taco",
+            "Unicorn", "Vampire", "Waffle", "Xylophone", "Yogurt",
+            "Poptart", "Banjo", "Churro", "Donut", "Eagle",
+            "Squirrel", "Giraffe", "Hamburger", "Ice-cream", "Jellyfish",
+            "Ketchup", "Lettuce", "Muffin", "Nacho", "Oatmeal",
+            "Pinecone", "Quilt", "Raisin", "Snail", "Turtle",
+            "Underpants", "Vampire", "Whale", "Xenomorph", "Yeti",
+            "Zebra", "Blimp", "Cucumber", "Duck", "Eggplant",
+            "Spinner", "Gumbo", "Hula-hoop", "Man", "Jellyfish",
+            "Kangaroo", "Llama", "Magma", "Nachos", "Otter",
+            "Pickle", "Quiche", "Ravioli", "Sloth", "Taco",
+            "Umpire", "Vinegar", "Worm", "Xanadu", "Yogurt",
+            "Zucchini", "Bumper", "Clown", "Dinosaur", "Elevator",
+            "Fidget", "Goose", "Hotdog", "Invention", "Jigsaw",
+            "Kite", "Lollipop", "Marshmallow", "Nutcracker", "Onion",
+            "Pickpocket", "Quokka", "Rainbow", "Sushi", "Teapot",
+            "Unicorn", "Vacuum", "Whistle", "Napkin", "Yawn"
     };
+
     static String generateUsername() {
         String randomAdjective = adjectives[random.nextInt(adjectives.length)];
         String randomNoun = nouns[random.nextInt(nouns.length)];

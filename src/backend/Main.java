@@ -9,6 +9,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -16,12 +19,18 @@ import java.util.stream.Collectors;
 public class Main {
 
     static MessageList messageList = new MessageList();
-    static Map<String, String> loggedUsers = new HashMap<String, String>();
+    static Map<String, String> loggedUsers = new HashMap<>();
 
 
     public static void main(String[] args) throws Exception {
         HttpServer server = HttpServer.create(new InetSocketAddress("10.0.0.198", 8000), 0);
-        server.createContext("/chat", new MyHandler());
+        server.createContext("/chat", new MessageHandler());
+
+        // goes to actual webpage
+        server.createContext("/chatterbox", new WebpageHandler());
+
+        // gets static resources
+        server.createContext("/resources", new StaticFileHandler());
 
         server.setExecutor(null); // creates a default executor
         System.out.print("Starting simple http server... ");
@@ -29,7 +38,79 @@ public class Main {
         System.out.println("STARTED!");
     }
 
-    static class MyHandler implements HttpHandler {
+    static class WebpageHandler implements HttpHandler {
+        @Override
+        public void handle(HttpExchange http) throws IOException {
+
+            if ("GET".equals(http.getRequestMethod())) {
+                // Serve the HTML file
+                String path = "src/frontend/chatterbox.html"; // Adjust path accordingly
+                byte[] htmlBytes = Files.readAllBytes(Paths.get(path));
+
+                // Set content type to text/html
+                http.getResponseHeaders().set("Content-Type", "text/html");
+
+                // Send the response headers and the HTML file content
+                http.sendResponseHeaders(200, htmlBytes.length);
+                OutputStream os = http.getResponseBody();
+                os.write(htmlBytes);
+                os.close();
+            }
+        }
+    }
+
+    static class StaticFileHandler implements HttpHandler {
+        @Override
+        public void handle(HttpExchange http) throws IOException {
+            // Serve static files (CSS, images, etc.)
+            String filePathString = "src/frontend" + http.getRequestURI().getPath(); // Adjust the resource path
+            Path filePath = Paths.get(filePathString);
+
+            if (Files.exists(filePath)) {
+                String mimeType = getMimeType(filePath.toString());
+                byte[] fileBytes = Files.readAllBytes(filePath);
+
+                // Set the correct content type for the static file
+                http.getResponseHeaders().set("Content-Type", mimeType);
+
+                // Send the response headers and the file content
+                http.sendResponseHeaders(200, fileBytes.length);
+                OutputStream os = http.getResponseBody();
+                os.write(fileBytes);
+                os.close();
+            } else {
+                // If the file doesn't exist, return a 404 response
+                http.sendResponseHeaders(404, 0);
+                OutputStream os = http.getResponseBody();
+                os.close();
+            }
+        }
+
+        // Helper method to get MIME type based on file extension
+        private String getMimeType(String fileName) {
+            if (fileName.endsWith(".css")) {
+                return "text/css";
+            } else if (fileName.endsWith(".jpg") || fileName.endsWith(".jpeg")) {
+                return "image/jpeg";
+            } else if (fileName.endsWith(".png")) {
+                return "image/png";
+            } else if (fileName.endsWith(".ttf")) {
+                return "font/ttf";
+            } else if (fileName.endsWith(".woff")) {
+                return "font/woff";
+            } else if (fileName.endsWith(".woff2")) {
+                return "font/woff2";
+            } else {
+                return "application/octet-stream"; // Default MIME type
+            }
+        }
+
+    }
+
+
+
+
+    static class MessageHandler implements HttpHandler {
         @Override
         public void handle(HttpExchange http) throws IOException {
 
@@ -50,9 +131,8 @@ public class Main {
                 String clientIp = http.getRemoteAddress().getAddress().getHostAddress();
                 String posterUsername;
                 if (loggedUsers.containsKey(clientIp)) {
-                     posterUsername = loggedUsers.get(clientIp);
-                }
-                else {
+                    posterUsername = loggedUsers.get(clientIp);
+                } else {
                     posterUsername = Message.generateUsername();
                     loggedUsers.put(clientIp, posterUsername);
                 }
@@ -68,8 +148,7 @@ public class Main {
 
                 responseItem = "MESSAGE SENT!\n";
 
-            }
-            else {
+            } else {
                 System.out.println(http.getResponseCode());
                 responseItem = "SOMETHING WENT WRONG";
             }
