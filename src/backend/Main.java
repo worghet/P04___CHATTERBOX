@@ -1,5 +1,6 @@
 package backend;
 
+import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
@@ -20,12 +21,13 @@ public class Main {
 
     static MessageList messageList = new MessageList();
     static Map<String, String> loggedUsers = new HashMap<>();
-
+    static Gson gson = new Gson();
 
     public static void main(String[] args) throws Exception {
 
         // make server on an ip TODO make auto
-        HttpServer server = HttpServer.create(new InetSocketAddress("10.0.0.198", 8000), 0);
+        HttpServer server = HttpServer.create(new InetSocketAddress(8000), 0);
+        System.out.println("10.0.0.198");
 
         // get messages (make /messages)
         server.createContext("/chat", new MessageHandler());
@@ -33,14 +35,40 @@ public class Main {
         // goes to actual webpage
         server.createContext("/chatterbox", new WebpageHandler());
 
+        // gives username
+        server.createContext("/username", new UsernameGiver());
+
         // gets static resources
         server.createContext("/resources", new StaticFileHandler());
+
 
         // idk what this is
         server.setExecutor(null); // creates a default executor
         System.out.print("Starting simple http server... ");
         server.start();
         System.out.println("STARTED!");
+    }
+
+    static class UsernameGiver implements HttpHandler {
+
+        @Override
+        public void handle(HttpExchange http) throws IOException {
+
+            String username;
+            String clientIp = http.getRemoteAddress().getAddress().getHostAddress();
+            if (!loggedUsers.containsKey(clientIp)) {
+                username = Message.generateUsername();
+                loggedUsers.put(clientIp, username);
+            } else {
+                username = loggedUsers.get(clientIp);
+            }
+
+            http.sendResponseHeaders(200, username.getBytes().length);
+            OutputStream os = http.getResponseBody();
+            os.write(username.getBytes());
+            os.close();
+            System.out.println("[" + username + " logged in.]");
+        }
     }
 
     // handler for "/chatterbox
@@ -51,6 +79,7 @@ public class Main {
             // technically shouldnt get post anytime, but did if just in case
             if ("GET".equals(http.getRequestMethod())) {
 
+                // if message list not empty; load it (
                 // serve html
 
                 // get byt file path
@@ -112,9 +141,6 @@ public class Main {
 
     }
 
-
-
-
     static class MessageHandler implements HttpHandler {
         @Override
         public void handle(HttpExchange http) throws IOException {
@@ -123,24 +149,13 @@ public class Main {
 
             if ("GET".equals(http.getRequestMethod())) {
 
-                responseItem = "CHATLOGS:\n";
+                responseItem = gson.toJson(messageList);
 
-                ///  make list of messages and write into response
-                for (Message message : messageList.messages) {
-                    responseItem += Message.formatMessage(message) + "\n";
-                }
 
             } // else if  POST   - get message from body / add to list
             else if ("POST".equals(http.getRequestMethod())) {
 
-                String clientIp = http.getRemoteAddress().getAddress().getHostAddress();
-                String posterUsername;
-                if (loggedUsers.containsKey(clientIp)) {
-                    posterUsername = loggedUsers.get(clientIp);
-                } else {
-                    posterUsername = Message.generateUsername();
-                    loggedUsers.put(clientIp, posterUsername);
-                }
+                String posterUsername = loggedUsers.get(http.getRemoteAddress().getAddress().getHostAddress());
 
                 // get message, add to list
                 String messageContent = new BufferedReader(new InputStreamReader(http.getRequestBody()))
@@ -148,10 +163,16 @@ public class Main {
 
                 String formattedTime = Message.getCurrentTimeStamp();
 
-                messageList.messages.add(new Message(posterUsername, messageContent, Message.generateID(), formattedTime));
+                if (messageContent.equals("user-disconnect")) {
+
+                }
+
+                Message sentMessage = new Message(posterUsername, messageContent, Message.generateID(), formattedTime);
+                messageList.messages.add(sentMessage);
+                responseItem = gson.toJson(sentMessage);
+
                 System.out.println(Message.formatMessage(messageList.messages.getLast()));
 
-                responseItem = "MESSAGE SENT!\n";
 
             } else {
                 System.out.println(http.getResponseCode());
@@ -183,7 +204,7 @@ public class Main {
 
              */
 
-            String response = "METHOD: " + http.getRequestMethod() + " --> " + responseItem;
+            String response = responseItem;// "METHOD: " + http.getRequestMethod() + " --> " + responseItem;
             http.sendResponseHeaders(200, response.length());
             OutputStream os = http.getResponseBody();
             os.write(response.getBytes());

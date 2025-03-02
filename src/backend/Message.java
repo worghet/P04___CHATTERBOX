@@ -42,7 +42,7 @@ public class Message {
             "Ridiculous", "Soggy", "Tacky", "Unhinged", "Vexed",
             "Wobbly", "Large", "Yowza", "Zipped", "Blundering",
             "Confused", "Dizzying", "Eccentric", "Frightful", "Grumpy",
-            "Horrible", "Irritating", "Jelly", "Kettle-shaped", "Laughable",
+            "Horrible", "Irritating", "Jelly", "Petty", "Laughable",
             "Muddled", "Nutso", "Overcooked", "Pineapple", "Quirky"
     };
 
@@ -53,12 +53,12 @@ public class Message {
             "Pineapple", "Quokka", "Raccoon", "Shark", "Taco",
             "Unicorn", "Vampire", "Waffle", "Xylophone", "Yogurt",
             "Poptart", "Banjo", "Churro", "Donut", "Eagle",
-            "Squirrel", "Giraffe", "Hamburger", "Ice-cream", "Jellyfish",
+            "Squirrel", "Giraffe", "Hamburger", "Ice", "Jellyfish",
             "Ketchup", "Lettuce", "Muffin", "Nacho", "Oatmeal",
             "Pinecone", "Quilt", "Raisin", "Snail", "Turtle",
             "Underpants", "Vampire", "Whale", "Xenomorph", "Yeti",
             "Zebra", "Blimp", "Cucumber", "Duck", "Eggplant",
-            "Spinner", "Gumbo", "Hula-hoop", "Man", "Jellyfish",
+            "Spinner", "Gumbo", "Hoop", "Man", "Jellyfish",
             "Kangaroo", "Llama", "Magma", "Nachos", "Otter",
             "Pickle", "Quiche", "Ravioli", "Sloth", "Taco",
             "Umpire", "Vinegar", "Worm", "Xanadu", "Yogurt",

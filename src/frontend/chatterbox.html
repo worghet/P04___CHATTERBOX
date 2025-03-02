@@ -56,7 +56,7 @@
             justify-content: center;
         }
 
-        .chat-area {
+        .chatbox {
             border: 3px solid black;
             background-color: #aaaaaa;
             width: 100%;
@@ -148,38 +148,185 @@
 
     <!-- TITLE -->
     <div class="title-section">
-        <img class="logo" src="resources/chatterbox.png" alt="">
+        <img class="logo" src="/resources/chatterbox.png" alt="">
     </div>
 
     <!-- CHAT AREA -->
     <div class="chat-section">
-        <div class="chat-area">
-            <div class="sent">
-                You sent this message!
-            </div>
-
-            <div class="recieved">
-                &lt;user1&gt; You recieved this message!
-            </div>
-
-        </div>
+        <div class="chatbox" id="chatbox-id"></div>
     </div>
 
     <!-- INPUT BAR, SEND, UPDATE -->
     <div class="inputs-section">
         <div class="dial">
             <!-- Input field -->
-            <input type="text" class="input-field" placeholder="Type your message...">
+            <input type="text" class="input-field" id="input-f" placeholder="Type your message...">
 
             <!-- Send button -->
-            <button class="button">SEND</button>
+            <button class="button" id="send-id" onclick="sendMessage()">SEND</button>
 
 
             <!-- Reload button -->
-            <button class="button">RELOAD</button>
+            <button class="button" onclick="reload()">RELOAD</button>
 
         </div>
     </div>
+
+
+
+    <script>
+
+        let username;
+        const chatBox = document.getElementById("chatbox-id")
+
+        window.onload = function () {
+            getUsername();
+            // chatBox.appendChild( USER CONNECTED)
+            
+        };
+
+        // window.addEventListener("beforeunload", function(event) {
+
+        //     fetch("/chat", {
+        //         method: "POST",
+        //         body: "user-disconnect"
+        //         //body =     JSON.stringify({
+        //         //     userId: 1,
+        //         //     title: "Fix my bugs",
+        //         //     completed: false
+        //         // }),
+        //         // headers: {
+        //         //     "Content-type": "application/json; charset=UTF-8"
+        //         // }
+        //     })
+
+        //         .then((response) => response.json())
+        //         .then((jsonResponse) => {
+        //             var disconnectDiv = buildMessageItem(jsonResponse);
+        //             disconnectDiv.style.backgroundColor = "#AC3834";
+        //             disconnectDiv.innerText = "[" + username + "DISCONNECTED]"
+        //             chatBox.appendChild(disconnectDiv)
+        //             chatBox.scrollTo(0, chatBox.scrollHeight);
+        //         });
+
+        // })
+
+
+        function getUsername() {
+            fetch("/username", {
+                method: "GET"
+            })
+                .then((response) => response.text())
+                .then((text) => {
+                    username = text;
+                });
+        }
+
+        function sendMessage() {
+            const tf = document.getElementById("input-f");
+            message = tf.value;
+            //tf.value = tf.value + 'bla';
+
+
+            fetch("/chat", {
+                method: "POST",
+                body: message
+                //     JSON.stringify({
+                //     userId: 1,
+                //     title: "Fix my bugs",
+                //     completed: false
+                // }),
+                // headers: {
+                //     "Content-type": "application/json; charset=UTF-8"
+                // }
+            })
+
+                .then((response) => response.json())
+                .then((jsonResponse) => {
+                    chatBox.appendChild(buildMessageItem(jsonResponse))
+                    chatBox.scrollTo(0, chatBox.scrollHeight);
+                    tf.value = "";
+                });
+
+
+
+        }
+
+        function reload() {
+            // const tf = document.getElementById("chat-f");
+            //message = tf.value;
+            //tf.value = tf.value + 'bla';
+
+
+            fetch("/chat", {
+                method: "GET",
+                //body: message
+                //     JSON.stringify({
+                //     userId: 1,
+                //     title: "Fix my bugs",
+                //     completed: false
+                // }),
+                // headers: {
+                //     "Content-type": "application/json; charset=UTF-8"
+                // }
+            })
+                //.then((response) => response.text())
+                //.then((text) => console.log(text));
+
+                .then((response) => response.json())
+                .then((jsonResponse) => {
+                    console.log(jsonResponse);
+
+                    // clear the chat messages
+                    while (chatBox.firstChild) {
+                        chatBox.removeChild(chatBox.firstChild);
+                    }
+
+                    // add each thing
+                    jsonResponse.messages.forEach(message => chatBox.appendChild(buildMessageItem(message)));
+                    chatBox.scrollTo(0, chatBox.scrollHeight);
+        
+
+                });
+            // ;
+
+
+
+
+        }
+
+        function buildMessageItem(messageObject) {
+            var messageDiv = document.createElement("div");
+
+
+            if (messageObject.username == username) {
+                messageDiv.classList.add("sent")
+                messageDiv.innerText = messageObject.contents;
+            }
+            else {
+                messageDiv.classList.add("recieved")
+                messageDiv.innerText = "<" + messageObject.username + "> " + messageObject.contents;
+            }
+
+
+            return messageDiv;
+
+        }
+
+
+
+        const sendButton = document.getElementById("input-f")
+        sendButton.addEventListener("keydown", function(event) {
+
+            if (event.key === "Enter") {
+                event.preventDefault();
+                sendMessage();
+            }
+
+        }) 
+
+
+    </script>
 
 </body>
 
