@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Chatterbox</title>
+
+    <style>
+        @font-face {
+            font-family: "retro";
+            src: url("resources/retro.ttf") format("truetype");
+        }
+
+        /* https://coolors.co/palette/595959-7f7f7f-a5a5a5-cccccc-f2f2f2 */
+
+        ::-webkit-scrollbar-thumb {
+            background-color: #7f7f7f;
+            border-radius: 0px;
+        }
+
+        ::-moz-scrollbar {
+            border-radius: 0px;
+        }
+
+        body {
+            margin: 0;
+            background-color: #CCCCCC;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100vh;
+            scrollbar-color: #7f7f7f #aaaaaa;
+        }
+
+        .title-section {
+            flex: 0.7;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+        }
+
+        .logo {
+            width: 70%;
+            margin: 0;
+            padding: 0;
+            object-fit: contain;
+        }
+
+        .chat-section,
+        .inputs-section {
+            width: 70%;
+            display: flex;
+            justify-content: center;
+        }
+
+        .chat-area {
+            border: 4px solid black;
+            background-color: #aaaaaa;
+            width: 100%;
+            flex: 3;
+            padding: 2%;
+            border-radius: 0.3vw;
+            display: flex;
+            flex-direction: column;
+            height: 40vh;
+            max-height: 40vh;
+            overflow-y: auto;
+            gap: 10px;
+        }
+
+        .sent {
+            padding: 0.5em 1em;
+            color: white;
+            background-color: rgba(0, 0, 0, 0.2);
+            border-radius: 0.2vh;
+            align-self: flex-end;
+            font-family: "retro";
+            padding-bottom: 10px;
+        }
+
+        .recieved {
+            padding: 0.5em 1em;
+            color: white;
+            background-color: rgba(0, 0, 0, 0.4);
+            border-radius: 0.2vh;
+            align-self: flex-start;
+            font-family: "retro";
+            padding-bottom: 10px;
+
+        }
+
+        .inputs-section {
+            flex: 0;
+            width: 70%;
+            height: fit-content;
+        }
+
+        .dial {
+            width: 100%;
+            height: fit-content;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-top: 1vh;
+            gap: 1vh;
+
+        }
+
+
+        .input-field {
+            width: 70%;
+            padding: 0.5em;
+            border-radius: 0.2vw;
+            border: 1px solid #aaa;
+            font-family: "retro";
+            font-size: 20px;
+        }
+
+        .button {
+            width: 30%;
+            padding: 0.5em 1em;
+            border: none;
+            background-color: #7f7f7f;
+            color: white;
+            border-radius: 0.2vw;
+            cursor: pointer;
+            font-family: "retro", monospace;
+            font-size: 20px;
+        }
+
+        .button:hover {
+
+            background-color: #595959;
+        }
+
+        .button:active {
+            background-color: #3c3c3c;
+        }
+    </style>
+
+</head>
+
+
+<body>
+
+    <!-- TITLE -->
+    <div class="title-section">
+        <img class="logo" src="resources/chatterbox.png" alt="">
+    </div>
+
+    <!-- CHAT AREA -->
+    <div class="chat-section">
+        <div class="chat-area">
+            <div class="sent">
+                You sent this message!
+            </div>
+
+            <div class="recieved">
+                &lt;user1&gt; You recieved this message!
+            </div>
+
+        </div>
+    </div>
+
+    <!-- INPUT BAR, SEND, UPDATE -->
+    <div class="inputs-section">
+        <div class="dial">
+            <!-- Input field -->
+            <input type="text" class="input-field" placeholder="Type your message...">
+
+            <!-- Send button -->
+            <button class="button">SEND</button>
+
+
+            <!-- Reload button -->
+            <button class="button">RELOAD</button>
+
+        </div>
+    </div>
+
+</body>
+
+</html>
