@@ -29,7 +29,7 @@ public class Main {
         String localHostAddress = getLocalIPAddress();
         int serverPort = 8000;
 
-        HttpServer server = HttpServer.create(new InetSocketAddress(serverPort), 0);
+        HttpServer server = HttpServer.create(new InetSocketAddress(localHostAddress, serverPort), 0);
 
         // get messages (make /messages)
         server.createContext("/chat", new MessageHandler());
@@ -49,7 +49,7 @@ public class Main {
         System.out.print("Starting simple http server... ");
         server.start();
         System.out.println("STARTED!");
-        System.out.println("http://" + localHostAddress + ":" + serverPort + "/chatterbox");
+        System.out.println("http://" + localHostAddress + ":" + serverPort + "/chatterbox\n(IF FROM CHROMEBOOK, USE IP ADDRESS)\n----------------------------------------");
     }
 
     public static String getLocalIPAddress() {
