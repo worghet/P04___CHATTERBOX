@@ -1,16 +1,22 @@
 package backend;
 
+// == IMPORTS ====================
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Random;
+import java.util.Date;
 
+// == CLASS MESSAGE ==
 public class Message {
 
+    // OBJECT FIELDS
     String username;
     String contents;
     String id;
     String formattedTime;
 
+    // ------------------------------------------------------------
+
+    // CONSTRUCTOR
     public Message(String username, String contents, String id, String formattedTime) {
         this.username = username;
         this.contents = contents;
@@ -18,13 +24,16 @@ public class Message {
         this.formattedTime = formattedTime;
     }
 
-
+    // ------------------------------------------------------------
 
     static String formatMessage(Message message) {
         return ("<" + message.username + "> " + message.contents + "   @" + message.formattedTime);
     }
 
+    // random obj
     static Random random = new Random();
+
+    // bunch of random adjectives
     static String[] adjectives = {
             "Absurd", "Bouncy", "Chubby", "Dizzy", "Eccentric",
             "Fluffy", "Goofy", "Hilarious", "Invisible", "Jiggly",
@@ -46,6 +55,7 @@ public class Message {
             "Muddled", "Nutso", "Overcooked", "Pineapple", "Quirky"
     };
 
+    // bunch of random nouns
     static String[] nouns = {
             "Bacon", "Banana", "Cabbage", "Disaster", "Egret",
             "Fungus", "Goat", "Hamster", "Igloo", "Jellybean",
@@ -57,11 +67,11 @@ public class Message {
             "Ketchup", "Lettuce", "Muffin", "Nacho", "Oatmeal",
             "Pinecone", "Quilt", "Raisin", "Snail", "Turtle",
             "Underpants", "Vampire", "Whale", "Xenomorph", "Yeti",
-            "Zebra", "Blimp", "Cucumber", "Duck", "Eggplant",
+            "Zebra", "Blimp", "Cucumber", "Duck", "Egg",
             "Spinner", "Gumbo", "Hoop", "Man", "Jellyfish",
             "Kangaroo", "Llama", "Magma", "Nachos", "Otter",
             "Pickle", "Quiche", "Ravioli", "Sloth", "Taco",
-            "Umpire", "Vinegar", "Worm", "Xanadu", "Yogurt",
+            "Umpire", "Vinegar", "Mouse", "Xanadu", "Yogurt",
             "Zucchini", "Bumper", "Clown", "Dinosaur", "Elevator",
             "Fidget", "Goose", "Hotdog", "Invention", "Jigsaw",
             "Kite", "Lollipop", "Marshmallow", "Nutcracker", "Onion",
@@ -69,6 +79,7 @@ public class Message {
             "Unicorn", "Vacuum", "Whistle", "Napkin", "Yawn"
     };
 
+    // generates a username by combining a random adjective and random noun
     static String generateUsername() {
         String randomAdjective = adjectives[random.nextInt(adjectives.length)];
         String randomNoun = nouns[random.nextInt(nouns.length)];
@@ -76,14 +87,17 @@ public class Message {
         return (randomAdjective + randomNoun);
     }
 
-    static int messageNumber = 0;
+    // total number of messages
+    static int numberOfMessages = 0;
 
+    // id generation for each message
     static String generateID() {
-        messageNumber++;
-        return String.valueOf(messageNumber);
+        numberOfMessages++;
+        return String.valueOf(numberOfMessages);
     }
 
-    public static String getCurrentTimeStamp() {
+    // get and return formatted time in yy-MM-dd HH:mm:ss.SSS
+    public static String getFormattedTime() {
         Date now = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
         return sdf.format(now);

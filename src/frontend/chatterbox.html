@@ -4,14 +4,14 @@
 <head>
     <meta charset="UTF-8">
     <title>Chatterbox</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
 
     <style>
         @font-face {
             font-family: "retro";
             src: url("resources/retro.ttf") format("truetype");
         }
-
-
 
         /* https://coolors.co/palette/595959-7f7f7f-a5a5a5-cccccc-f2f2f2 */
 
@@ -167,7 +167,7 @@
 
 
             <!-- Reload button -->
-            <button class="button" onclick="reload()">RELOAD</button>
+<!--            <button class="button" onclick="reload()">RELOAD</button>-->
 
         </div>
     </div>
@@ -177,15 +177,17 @@
     <script>
 
         let username;
+        var numMessages = 0;
         const chatBox = document.getElementById("chatbox-id")
 
         window.onload = function () {
             getUsername();
             // chatBox.appendChild( USER CONNECTED)
-            
+
         };
 
-        setInterval(reload, 100);
+        // perfom reload every 300 ms
+        setInterval(reload, 300);
 
         // window.addEventListener("beforeunload", function(event) {
 
@@ -284,6 +286,7 @@
                 .then((jsonResponse) => {
                     console.log(jsonResponse);
 
+
                     // clear the chat messages
                     while (chatBox.firstChild) {
                         chatBox.removeChild(chatBox.firstChild);
@@ -292,7 +295,7 @@
                     // add each thing
                     jsonResponse.messages.forEach(message => chatBox.appendChild(buildMessageItem(message)));
                     // chatBox.scrollTo(0, chatBox.scrollHeight);
-        
+
 
                 });
             // ;
@@ -330,7 +333,7 @@
                 sendMessage();
             }
 
-        }) 
+        })
 
 
     </script>
